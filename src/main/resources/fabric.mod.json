@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "vine-cork",
+  "version": "${mod_version}",
+  "name": "Vine Cork",
+  "description": "Server-side scaffold for stopping vine growth.",
+  "authors": [
+    "magicus"
+  ],
+  "contact": {
+    "homepage": "https://github.com/magicus/vine-cork",
+    "sources": "https://github.com/magicus/vine-cork"
+  },
+  "license": "LGPL-3.0-only",
+  "icon": "assets/vine-cork/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "server": [
+      "se.icus.mag.vinecork.VineCorkMod"
+    ]
+  },
+  "depends": {
+    "fabric-api": ">=${fabric_api_version}",
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "${supported_minecraft_versions}"
+  }
+}
