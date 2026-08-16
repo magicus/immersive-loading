@@ -1,0 +1,17 @@
+{
+  "client": [
+    "GameRendererMixin",
+    "JoinMultiplayerScreenMixin",
+    "MinecraftMixin",
+    "ScreenMixin",
+    "TitleScreenMixin",
+    "WorldListWidgetMixin"
+  ],
+  "compatibilityLevel": "JAVA_21",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8",
+  "package": "se.icus.mag.immersiveloading.mixin",
+  "required": true
+}

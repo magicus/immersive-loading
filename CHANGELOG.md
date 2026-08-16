@@ -1,9 +1,7 @@
 # Changelog
 
-## 0.1.0+26.1 - 2026-07-24
+## 0.1.0+1.21.4 - 2026-09-19
 
 ### Added
 
-- Initial project scaffold.
-- Dedicated server entrypoint with dummy main class.
-- GitHub Actions build and release workflow templates.
+- Initial release
