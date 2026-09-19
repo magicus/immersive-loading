@@ -1,6 +1,6 @@
 # Immersive Loading
 [![Modrinth](https://img.shields.io/modrinth/dt/immersive-loading?logo=modrinth)](https://modrinth.com/mod/immersive-loading)
-[![CurseForge](https://img.shields.io/curseforge/dt/484738?logo=curseforge)](https://www.curseforge.com/minecraft/mc-mods/immersive-loading)
+[![CurseForge](https://img.shields.io/curseforge/dt/1703225?logo=curseforge)](https://www.curseforge.com/minecraft/mc-mods/immersive-loading)
 [![GitHub](https://img.shields.io/github/downloads/magicus/immersive-loading/total?logo=github)](https://github.com/magicus/immersive-loading/releases)
 
 ![Logo](docs/logo.png)

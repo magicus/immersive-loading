@@ -8,8 +8,8 @@ on:
 
 env:
   MOD_NAME: Immersive Loading
-  MODRINTH_ID: 'REPLACE_ME'
-  CURSEFORGE_ID: 'REPLACE_ME'
+  MODRINTH_ID: '6Hb3nOic'
+  CURSEFORGE_ID: '1703225'
   JAVA_VERSION: 25
 
 jobs:
