@@ -3,11 +3,18 @@ plugins {
     id "com.diffplug.spotless" version "${spotless_version}"
 }
 
+repositories {
+    maven {
+        url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"
+    }
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}"
 }
 
 ext.mod_version = "${project.mod_base_version}+${project.minecraft_version}"
@@ -16,6 +23,13 @@ version = ext.mod_version
 
 loom {
     clientOnlyMinecraftJar()
+
+    runs {
+        client {
+            property("devauth.configDir", getRootProject().file(".devauth").absolutePath)
+            client()
+        }
+    }
 }
 
 processResources {
