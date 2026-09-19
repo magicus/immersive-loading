@@ -7,11 +7,9 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }
 
 ext.mod_version = "${project.mod_base_version}+${project.minecraft_version}"
-def fabric_api_version = project.fabric_api_version.tokenize('+')[0]
 version = ext.mod_version
 
 loom {
@@ -22,16 +20,14 @@ processResources {
     inputs.properties([
         "mod_version": project.mod_version,
         "supported_minecraft_versions": project.supported_minecraft_versions,
-        "loader_version": project.loader_version,
-        "fabric_api_version": fabric_api_version,
+        "loader_version": project.loader_version
     ])
 
     filesMatching("fabric.mod.json") {
         expand([
             mod_version: project.mod_version,
             supported_minecraft_versions: project.supported_minecraft_versions,
-            loader_version: project.loader_version,
-            fabric_api_version: fabric_api_version,
+            loader_version: project.loader_version
         ])
     }
 }
