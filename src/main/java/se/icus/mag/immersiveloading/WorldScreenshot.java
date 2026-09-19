@@ -42,20 +42,22 @@ public class WorldScreenshot {
             }
         }
 
-        saveScreenshot();
-        // Update to use new screenshot
-        preloadScreenshot();
+        saveScreenshotAndReload();
     }
 
-    private void saveScreenshot() {
-        NativeImage image = Screenshot.takeScreenshot(Minecraft.getInstance().getMainRenderTarget());
-        try {
-            image.writeToFile(screenshotPath);
-        } catch (IOException e) {
-            ImmersiveLoadingMod.LOGGER.error("Could not write background screenshot", e);
-        } finally {
-            image.close();
-        }
+    private void saveScreenshotAndReload() {
+        Screenshot.takeScreenshot(Minecraft.getInstance().getMainRenderTarget(), image -> {
+            try {
+                image.writeToFile(screenshotPath);
+            } catch (IOException e) {
+                ImmersiveLoadingMod.LOGGER.error("Could not write background screenshot", e);
+            } finally {
+                image.close();
+            }
+
+            // Update to use new screenshot
+            preloadScreenshot();
+        });
     }
 
     private void preloadScreenshot() {
@@ -66,7 +68,7 @@ public class WorldScreenshot {
 
         try (InputStream inputStream = Files.newInputStream(screenshotPath)) {
             NativeImage nativeImage = NativeImage.read(inputStream);
-            DynamicTexture image = new DynamicTexture(nativeImage);
+            DynamicTexture image = new DynamicTexture(SCREENSHOT::toString, nativeImage);
             Minecraft.getInstance().getTextureManager().register(SCREENSHOT, image);
             width = nativeImage.getWidth();
             height = nativeImage.getHeight();
