@@ -20,6 +20,7 @@ import java.util.OptionalInt;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.CachedOrthoProjectionMatrixBuffer;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
@@ -43,11 +44,7 @@ public class BackgroundRenderer {
         modelView.translate(0.0F, 0.0F, -11000.0F);
         GpuBufferSlice dynamicTransforms = RenderSystem.getDynamicUniforms()
                 .writeTransform(
-                        new Matrix4f(modelView),
-                        new Vector4f(1.0F, 1.0F, 1.0F, 1.0F),
-                        new Vector3f(),
-                        new Matrix4f(),
-                        0.0F);
+                        new Matrix4f(modelView), new Vector4f(1.0F, 1.0F, 1.0F, 1.0F), new Vector3f(), new Matrix4f());
         modelView.popMatrix();
 
         try (RenderPass pass = RenderSystem.getDevice()
@@ -117,11 +114,8 @@ public class BackgroundRenderer {
             pass.setVertexBuffer(0, vertexBuffer);
             pass.setIndexBuffer(indices.getBuffer(indexCount), indices.type());
 
-            pass.bindSampler(
-                    "Sampler0",
-                    client.getTextureManager()
-                            .getTexture(WorldScreenshot.SCREENSHOT)
-                            .getTextureView());
+            AbstractTexture screenshot = client.getTextureManager().getTexture(WorldScreenshot.SCREENSHOT);
+            pass.bindTexture("Sampler0", screenshot.getTextureView(), screenshot.getSampler());
 
             pass.drawIndexed(0, 0, indexCount, 1);
 

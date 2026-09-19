@@ -14,11 +14,11 @@ import net.minecraft.client.Screenshot;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class WorldScreenshot {
-    public static final ResourceLocation SCREENSHOT =
-            ResourceLocation.fromNamespaceAndPath(ImmersiveLoadingMod.MOD_ID, "screenshot");
+    public static final Identifier SCREENSHOT =
+            Identifier.fromNamespaceAndPath(ImmersiveLoadingMod.MOD_ID, "screenshot");
 
     private final Path screenshotPath;
     private final BackgroundRenderer renderer = new BackgroundRenderer();
