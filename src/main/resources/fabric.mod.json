@@ -3,7 +3,7 @@
   "id": "immersive-loading",
   "version": "${mod_version}",
   "name": "Immersive Loading",
-  "description": "Replace panorama with a screenshot of the world you are entering",
+  "description": "Replace the background panorama with a screenshot of the world you are entering",
   "authors": [
     "magicus"
   ],
