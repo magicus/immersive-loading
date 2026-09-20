@@ -8,7 +8,7 @@
     "WorldListWidgetMixin",
     "WorldSelectionListMixin"
   ],
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "injectors": {
     "defaultRequire": 1
   },
