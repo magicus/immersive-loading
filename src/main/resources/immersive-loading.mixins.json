@@ -5,7 +5,8 @@
     "MinecraftMixin",
     "ScreenMixin",
     "TitleScreenMixin",
-    "WorldListWidgetMixin"
+    "WorldListWidgetMixin",
+    "WorldSelectionListMixin"
   ],
   "compatibilityLevel": "JAVA_21",
   "injectors": {
