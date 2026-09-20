@@ -5,7 +5,6 @@
 package se.icus.mag.immersiveloading;
 
 import java.nio.file.Path;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.storage.LevelStorageSource;
 
@@ -57,7 +56,7 @@ public class ImmersiveLoading {
 
         shouldCapture = true;
         // Trigger a final render to be able to capture the screenshot
-        Minecraft.getInstance().gameRenderer.render(DeltaTracker.ZERO, true);
+        Minecraft.getInstance().gameRenderer.render();
     }
 
     public void interceptRenderTakeScreenshot() {

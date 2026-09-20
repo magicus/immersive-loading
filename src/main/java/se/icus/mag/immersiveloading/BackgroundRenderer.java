@@ -4,21 +4,21 @@
  */
 package se.icus.mag.immersiveloading;
 
-import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.ProjectionType;
-import com.mojang.blaze3d.buffers.GpuBuffer;
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.systems.GpuDevice;
-import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.FilterMode;
-import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.MeshData;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.renderpearl.api.buffers.GpuBuffer;
+import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
+import com.mojang.renderpearl.api.commands.RenderPass;
+import com.mojang.renderpearl.api.device.GpuDevice;
+import com.mojang.renderpearl.api.pipeline.PrimitiveTopology;
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
+import com.mojang.renderpearl.api.textures.FilterMode;
+import com.mojang.renderpearl.api.textures.GpuTexture;
+import com.mojang.renderpearl.api.vertex.VertexFormat;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalDouble;
@@ -108,7 +108,7 @@ public class BackgroundRenderer {
                             .setColor(0xFFFFFFFF);
                     builder.addVertex(x + renderWidth, y, 0).setUv(1.0F, 1.0F).setColor(0xFFFFFFFF);
                 },
-                pass -> pass.bindTexture("Sampler0", screenshot.getTextureView(), screenshot.getSampler()));
+                pass -> pass.setUniform("Sampler0", screenshot.getTextureView(), screenshot.getSampler()));
     }
 
     private void drawQuad(
@@ -138,7 +138,7 @@ public class BackgroundRenderer {
                                     Optional.empty(),
                                     target.getDepthTextureView(),
                                     OptionalDouble.empty())) {
-                        pass.setPipeline(pipeline);
+                        pass.setPipeline(RenderSystem.getCompiledPipeline(pipeline));
                         RenderSystem.bindDefaultUniforms(pass);
                         pass.setUniform("DynamicTransforms", dynamicTransforms);
                         pass.setVertexBuffer(0, vertexBuffer.slice());
