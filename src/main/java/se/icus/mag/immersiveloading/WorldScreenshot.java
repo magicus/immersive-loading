@@ -4,6 +4,7 @@
  */
 package se.icus.mag.immersiveloading;
 
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.NativeImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
 
 public class WorldScreenshot {
     public static final Identifier SCREENSHOT =
@@ -40,22 +42,28 @@ public class WorldScreenshot {
             }
         }
 
-        saveScreenshotAndReload();
+        updateScreenshotTexture();
+        saveScreenshot();
     }
 
-    private void saveScreenshotAndReload() {
-        Screenshot.takeScreenshot(Minecraft.getInstance().getMainRenderTarget(), image -> {
-            try {
-                image.writeToFile(screenshotPath);
-            } catch (IOException e) {
-                ImmersiveLoadingMod.LOGGER.error("Could not write background screenshot", e);
-            } finally {
-                image.close();
-            }
+    private void updateScreenshotTexture() {
+        RenderTarget target = Minecraft.getInstance().gameRenderer.mainRenderTarget();
+        renderer.updateTexture(target);
 
-            // Update to use new screenshot
-            preloadScreenshot();
-        });
+        width = target.width;
+        height = target.height;
+    }
+
+    private void saveScreenshot() {
+        Screenshot.takeScreenshot(
+                Minecraft.getInstance().gameRenderer.mainRenderTarget(),
+                image -> Util.ioPool().execute(() -> {
+                    try (image) {
+                        image.writeToFile(screenshotPath);
+                    } catch (IOException e) {
+                        ImmersiveLoadingMod.LOGGER.error("Could not write background screenshot", e);
+                    }
+                }));
     }
 
     private void preloadScreenshot() {
@@ -66,7 +74,14 @@ public class WorldScreenshot {
 
         try (InputStream inputStream = Files.newInputStream(screenshotPath)) {
             NativeImage nativeImage = NativeImage.read(inputStream);
-            DynamicTexture image = new DynamicTexture(SCREENSHOT::toString, nativeImage);
+            // Flip upside down to match GpuTextureSnapshot
+            NativeImage textureImage =
+                    new NativeImage(nativeImage.format(), nativeImage.getWidth(), nativeImage.getHeight(), false);
+            nativeImage.copyRect(
+                    textureImage, 0, 0, 0, 0, nativeImage.getWidth(), nativeImage.getHeight(), false, true);
+            nativeImage.close();
+
+            DynamicTexture image = new DynamicTexture(SCREENSHOT::toString, textureImage);
             Minecraft.getInstance().getTextureManager().register(SCREENSHOT, image);
             width = nativeImage.getWidth();
             height = nativeImage.getHeight();
