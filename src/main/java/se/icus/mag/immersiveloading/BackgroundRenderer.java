@@ -110,11 +110,8 @@ public class BackgroundRenderer {
             BufferBuilder builder,
             Consumer<RenderPass> configurePass) {
         try (MeshData mesh = builder.buildOrThrow()) {
-            GpuBuffer vertexBuffer = RenderSystem.getDevice()
-                    .createBuffer(
-                            () -> label,
-                            GpuBuffer.USAGE_VERTEX,
-                            mesh.vertexBuffer());
+            GpuBuffer vertexBuffer =
+                    RenderSystem.getDevice().createBuffer(() -> label, GpuBuffer.USAGE_VERTEX, mesh.vertexBuffer());
 
             int indexCount = mesh.drawState().indexCount();
             RenderSystem.AutoStorageIndexBuffer indices = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
