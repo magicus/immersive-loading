@@ -17,6 +17,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
+import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Projection;
 import net.minecraft.client.renderer.ProjectionMatrixBuffer;
@@ -71,34 +72,7 @@ public class BackgroundRenderer {
         builder.addVertex(screenWidth, screenHeight, 0).setColor(0xFF000000);
         builder.addVertex(screenWidth, 0, 0).setColor(0xFF000000);
 
-        try (MeshData mesh = builder.buildOrThrow()) {
-            GpuBuffer vertexBuffer = RenderSystem.getDevice()
-                    .createBuffer(
-                            () -> "Immersive Loading screenshot background",
-                            GpuBuffer.USAGE_VERTEX,
-                            mesh.vertexBuffer());
-
-            int indexCount = mesh.drawState().indexCount();
-            RenderSystem.AutoStorageIndexBuffer indices = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
-
-            try (RenderPass pass = RenderSystem.getDevice()
-                    .createCommandEncoder()
-                    .createRenderPass(
-                            () -> "Immersive Loading screenshot background",
-                            target.getColorTextureView(),
-                            OptionalInt.empty(),
-                            target.getDepthTextureView(),
-                            OptionalDouble.empty())) {
-                pass.setPipeline(pipeline);
-                RenderSystem.bindDefaultUniforms(pass);
-                pass.setUniform("DynamicTransforms", dynamicTransforms);
-                pass.setVertexBuffer(0, vertexBuffer);
-                pass.setIndexBuffer(indices.getBuffer(indexCount), indices.type());
-                pass.drawIndexed(0, 0, indexCount, 1);
-            }
-
-            vertexBuffer.close();
-        }
+        drawQuad(target, dynamicTransforms, pipeline, "Immersive Loading screenshot background", builder, pass -> {});
     }
 
     private void drawScreenshotQuad(
@@ -118,9 +92,29 @@ public class BackgroundRenderer {
                 .setColor(0xFFFFFFFF);
         builder.addVertex(x + renderWidth, y, 0).setUv(1.0F, 0.0F).setColor(0xFFFFFFFF);
 
+        AbstractTexture screenshot = client.getTextureManager().getTexture(WorldScreenshot.SCREENSHOT);
+        drawQuad(
+                target,
+                dynamicTransforms,
+                pipeline,
+                "Immersive Loading screenshot",
+                builder,
+                pass -> pass.bindTexture("Sampler0", screenshot.getTextureView(), screenshot.getSampler()));
+    }
+
+    private void drawQuad(
+            RenderTarget target,
+            GpuBufferSlice dynamicTransforms,
+            RenderPipeline pipeline,
+            String label,
+            BufferBuilder builder,
+            Consumer<RenderPass> configurePass) {
         try (MeshData mesh = builder.buildOrThrow()) {
             GpuBuffer vertexBuffer = RenderSystem.getDevice()
-                    .createBuffer(() -> "Immersive Loading screenshot", GpuBuffer.USAGE_VERTEX, mesh.vertexBuffer());
+                    .createBuffer(
+                            () -> label,
+                            GpuBuffer.USAGE_VERTEX,
+                            mesh.vertexBuffer());
 
             int indexCount = mesh.drawState().indexCount();
             RenderSystem.AutoStorageIndexBuffer indices = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
@@ -128,7 +122,7 @@ public class BackgroundRenderer {
             try (RenderPass pass = RenderSystem.getDevice()
                     .createCommandEncoder()
                     .createRenderPass(
-                            () -> "Immersive Loading screenshot",
+                            () -> label,
                             target.getColorTextureView(),
                             OptionalInt.empty(),
                             target.getDepthTextureView(),
@@ -138,10 +132,7 @@ public class BackgroundRenderer {
                 pass.setUniform("DynamicTransforms", dynamicTransforms);
                 pass.setVertexBuffer(0, vertexBuffer);
                 pass.setIndexBuffer(indices.getBuffer(indexCount), indices.type());
-
-                AbstractTexture screenshot = client.getTextureManager().getTexture(WorldScreenshot.SCREENSHOT);
-                pass.bindTexture("Sampler0", screenshot.getTextureView(), screenshot.getSampler());
-
+                configurePass.accept(pass);
                 pass.drawIndexed(0, 0, indexCount, 1);
             }
 
