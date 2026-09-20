@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0+26.1 - 2026-09-20
+
+### Added
+
+- Support for Minecraft 26.1
+
 ## 1.0.0+1.21.11 - 2026-09-20
 
 ### Added

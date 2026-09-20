@@ -7,8 +7,6 @@ package se.icus.mag.immersiveloading;
 import java.nio.file.Path;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.level.storage.LevelStorageSource;
 
 public class ImmersiveLoading {
@@ -69,9 +67,10 @@ public class ImmersiveLoading {
         }
     }
 
-    public void interceptRenderPanorama(GuiGraphics graphics, Screen screen) {
-        if (worldScreenshot != null) {
-            worldScreenshot.renderScreenshot(graphics, screen);
-        }
+    public boolean interceptRenderPanorama() {
+        if (worldScreenshot == null) return false;
+
+        worldScreenshot.renderScreenshot();
+        return true;
     }
 }

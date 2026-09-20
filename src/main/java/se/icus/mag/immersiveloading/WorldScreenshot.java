@@ -11,8 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.Identifier;
 
@@ -78,14 +76,9 @@ public class WorldScreenshot {
         }
     }
 
-    public void renderScreenshot(GuiGraphics graphics, Screen screen) {
+    public void renderScreenshot() {
         if (!textureLoaded) return;
 
-        double scale = screen.height / (double) height;
-        int renderWidth = (int) Math.round(width * scale);
-        int renderHeight = screen.height;
-        int x = (screen.width - renderWidth) / 2;
-
-        renderer.render(x, 0, renderWidth, renderHeight, screen.width, screen.height);
+        renderer.render(width, height);
     }
 }

@@ -1,9 +1,9 @@
 {
   "client": [
     "GameRendererMixin",
+    "GuiRendererMixin",
     "JoinMultiplayerScreenMixin",
     "MinecraftMixin",
-    "ScreenMixin",
     "TitleScreenMixin",
     "WorldListWidgetMixin",
     "WorldSelectionListMixin"
